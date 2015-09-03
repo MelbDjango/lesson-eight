@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Client projects{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h2>Client projects</h2>
+  </div>
+
+  <h3>Client</h3>
+
+  {% include 'snippets/form_default.html' with form_title='Change Client' form_submit_label='Update' %}  
+
+  <h3>Projects</h3>
+  <ul class="list-unstyled col-md-6 pull-left" style="padding: 0;">
+    {% for project in client.project_set.all %}
+      <li class="panel panel-default">
+        <div class="panel-heading">
+          {{ project.name }}
+        </div>
+        <ul class="list-group">
+          {% for entry in project.entry_set.all %}
+            <li class="list-group-item">{{ entry.description }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% empty %}
+      <li>
+        No projects
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
