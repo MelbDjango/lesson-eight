@@ -16,7 +16,9 @@ Check our RESOURCES.md for some links we think you'll find handy.
 - [ ] [Fork this repository][gh-fork]
 - [ ] Clone the repo to your own machine
 - [ ] Use the virtualenv you created in previous lesson
-- [ ] Add tests for the views using the Django's test client
+- [ ] Deploy your application to Heroku and email a link to [Brenton](brenton@commoncode.com.au).
+
+We're hoping to organise a **prize** for people that have made it this far. We're asking you to email Brenton so that we have some contact details for you.
 
 When you've completed some or all of the homework please make a [Pull Request][gh-pr] against this repository. If you submit your work before Wednesday evening we'll give you feedback before the next class.
 
