@@ -367,7 +367,7 @@ http://gunicorn.org
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['.herokuapp.com']
+ALLOWED_HOSTS = ['<your-app>.herokuapp.com']
 ```
 
 ---
@@ -404,6 +404,7 @@ DEBUG = os.uname()[0] == 'Darwin'
 ```python
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ThIs-K3Y-iSnT-a-5eCrEt')
 ```
+
 ---
 
 ### Our new requirements.txt
@@ -411,11 +412,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ThIs-K3Y-iSnT-a-5eCrEt')
 ```
 # requirements.txt
 
-Django==1.7.4
+Django==1.8.4
 dj-database-url==0.3.0
-gunicorn==19.2.1
-whitenoise==1.0.6
-psycopg2==2.6
+gunicorn==19.3.0
+whitenoise==2.0.3
+psycopg2==2.6.1
 ```
 
 http://slides.com/brntn/managing-your-django-requirements/#/
