@@ -168,6 +168,41 @@ class Article(models.Model):
 
 ---
 
+## Creating object with current user
+
+- Do **not** include the `author` field in the form!
+
+```python
+
+class ArticleCreateView(LoginRequiredMixin, CreateView):
+    # ...
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(ArticleCreateView, self).form_valid(form)
+```
+
+---
+
+## Limiting access to object owner
+
+```python
+
+class ArticleDetailView(LoginRequiredMixin, DetailView):
+    # ...
+
+    def get_queryset(self):
+        qs = super(ArticleDetailView, self).get_queryset()
+        qs = qs.filter(author=self.request.user)
+        return qs
+```
+
+- Same works for `ListView`, `UpdateView`, `DeleteView`.
+  - Do **not** include the `author` field in the form for `UpdateView`!
+- This will return an HTTP 404 (Not Found) error when a user is not the author
+
+---
+
 ## We're Almost Done!
 
 - One more class:
