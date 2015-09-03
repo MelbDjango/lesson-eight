@@ -203,10 +203,264 @@ class ArticleDetailView(LoginRequiredMixin, DetailView):
 
 ---
 
+![](http://i.imgur.com/WjfRf2H.png)
+
+---
+
+### Why Heroku?
+
+- Cheap during development and testing (reasonable after that)
+- Quick and easy to get started
+- Scales really well
+- git based workflow
+- Release management and rollback
+
+---
+
+### Packages we'll use
+
+- Heroku Toolkit
+- dj-database-url
+- whitenoise
+- gunicorn
+- Django
+- (virtualenv)
+
+---
+
+### Heroku Toolbelt
+
+- Availale for all major platforms
+- Has commands for setting up domains, etc.
+- Let's you access logs and run management commands
+
+---
+
+### Heroku Toolbelt
+
+```shell
+> heroku --help
+
+Usage: heroku COMMAND [--app APP] [command-specific-options]
+
+Primary help topics, type "heroku help TOPIC" for more details:
+
+  addons    #  manage addon resources
+  apps      #  manage apps (create, destroy)
+  auth      #  authentication (login, logout)
+  config    #  manage app config vars
+  domains   #  manage custom domains
+  logs      #  display logs for an app
+  ps        #  manage dynos (dynos, workers)
+  releases  #  manage app releases
+  run       #  run one-off commands (console, rake)
+  sharing   #  manage collaborators on an app
+```
+
+https://toolbelt.heroku.com/
+
+---
+
+### dj-database-url
+
+- Abstracts away our `DATABASES` configuration
+  - On Heroku, we don't know our DB details
+- Sets up your database based on `DATABASE_URL` environment variable
+- Supports PostgreSQL, PostGIS, MySQL, MySQL (GIS) and SQLite
+- Install it locally: `pip install dj-database-url`
+
+---
+
+### dj-database-url
+
+```python
+# settings.py
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+import dj_database_url
+DATABASES = {
+    'default': dj_database_url.config(default='sqlite:///{}'.format(
+        DATABASES['default']['NAME'])
+    )
+}
+```
+
+https://github.com/kennethreitz/dj-database-url
+
+---
+
+### Static Files
+
+- In development Django serves your static files
+- In production you don't really want that
+- You can set up nginx, Apache or uWSGI to do it
+- `whitenoise` provides a happy middleground (and it's super easy!)
+
+- `pip install whitenoise`
+
+---
+
+### whitenoise
+
+```python
+# wsgi.py
+
+from django.core.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
+
+application = DjangoWhiteNoise(get_wsgi_application())
+```
+
+```python
+# settings.py
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+```
+
+https://github.com/evansd/whitenoise
+
+---
+
+### Running the Application
+
+- Goodbye `./manage.py runserver`!
+- Hello `gunicorn`
+
+- You can use other `WSGI` compliant servers too
+  - uWSGI
+  - Apache/mod_wsgi
+
+- (you don't need to install this one locally)
+
+---
+
+### gunicorn
+
+```
+# Procfile
+
+web: gunicorn melbdjangoheroku.wsgi --log-file -
+```
+
+http://gunicorn.org
+
+---
+
+### Don't use FastCGI
+
+- FastCGI support is deprecated and will be removed in Django 1.9
+- This was useful in shared hosting environments, but Heroku is the better way!
+
+---
+
+### Django settings
+
+```python
+# settings.py
+
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+ALLOWED_HOSTS = ['.herokuapp.com']
+```
+
+---
+
+### Setting Debug = False
+
+- In Production we need to make sure `DEBUG=False`
+  - This is _really_ important
+- Larger applications tend to use different settings for each environment
+  - Check out `django-classy-settings` and
+
+```python
+# Use an environment variable, default to the safe value
+# export DJANGO_DEBUG=True
+DEBUG = os.environ.get('DJANGO_DEBUG', False)
+
+# Use _your_ environment to do the switch
+DEBUG = os.uname()[0] == 'Darwin'
+```
+
+---
+
+### Your secret_key
+
+- Django's `SECRET_KEY` needs to remain secret!
+  - If your project is open source, you need to use a secret key that's _not_ in your repository
+  - This is good practice either way
+- Use the `heroku config:set` command
+
+```
+> heroku config:set DJANGO_SECRET_KEY=<long-random-string>
+```
+
+```python
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ThIs-K3Y-iSnT-a-5eCrEt')
+```
+---
+
+### Our new requirements.txt
+
+```
+# requirements.txt
+
+Django==1.7.4
+dj-database-url==0.3.0
+gunicorn==19.2.1
+whitenoise==1.0.6
+psycopg2==2.6
+```
+
+http://slides.com/brntn/managing-your-django-requirements/#/
+
+---
+
+### Actually Deploying our Application
+
+- Commit your configuration
+- run `heroku create`
+- `git push heroku master`
+- heroku looks after:
+  - installing (and removing) requirements
+  - collectstatic
+- `heroku run python manage.py migrate`
+- `heroku run python manage.py createsuperuser`
+
+
+---
+
+### Things that aren't Heroku
+
+- PaaS aimed at Python/Django:
+  - Gondor.io
+  - Python Anywhere
+  - Open Shift
+
+- Or, your "own" box:
+  - Digital Ocean
+  - AWS / Azure
+
+---
+
+### The Django Deployment Checklist
+
+- There's a bunch of other stuff you should _check_ before deploying
+- Check the docs:
+  - https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+
+---
+
 ## We're Almost Done!
 
 - One more class:
-  - Deploying your Django App
+  - Some more advanced Django topics
   - Demo Day!
 
 - MelbDjango School 201 will launch soon!
