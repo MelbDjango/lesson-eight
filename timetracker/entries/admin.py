@@ -3,6 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from . import models
 
+
 class EntryAdmin(admin.ModelAdmin):
     list_display = ('project', 'description', 'start', 'stop')
     list_filter = ('project',)

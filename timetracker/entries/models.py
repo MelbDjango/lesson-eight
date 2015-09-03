@@ -28,7 +28,9 @@ class Entry(models.Model):
         verbose_name_plural = 'entries'
 
     def __str__(self):
-        return '[{} - {}] ({}) {}'.format(self.start, self.stop, self.project.name, self.description)
+        return '[{} - {}] ({}) {}'.format(
+            self.start, self.stop, self.project.name, self.description
+        )
 
     def is_finished(self):
         return self.stop is not None

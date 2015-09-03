@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from .models import Project, Client, Entry
+from .models import Client, Entry, Project
 
 
 class ClientForm(forms.ModelForm):
@@ -56,15 +56,15 @@ class EntryForm(forms.ModelForm):
 
     def clean(self):
         """
-        This method handles the validation of the form overall and is useful for
-        handling scenarios like when a field relies on another field
+        This method handles the validation of the form overall and is useful
+        for handling scenarios like when a field relies on another field
         """
-        # Call parent's clean method to ensure any validation logic in parent class
-        # is preserved
+        # Call parent's clean method to ensure any validation logic in parent
+        # class is preserved
         cleaned_data = super(EntryForm, self).clean()
 
-        # Get the start and stop values from the cleaned_data dictionary, or None
-        # if the dictionary keys are missing
+        # Get the start and stop values from the cleaned_data dictionary, or
+        # None if the dictionary keys are missing
         start = cleaned_data.get('start', None)
         stop = cleaned_data.get('stop', None)
 

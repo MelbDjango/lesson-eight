@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 def move_client_name_to_temporary_field(apps, schema_editor):
@@ -10,6 +10,7 @@ def move_client_name_to_temporary_field(apps, schema_editor):
     for p in Project.objects.all():
         p.client_name = p.client
         p.save()
+
 
 def create_clients(apps, schema_editor):
     Client = apps.get_model("entries", "Client")
