@@ -97,7 +97,7 @@ def myview(request):
 
 ---
 
-## Limiting access to Class Based Views
+## Limiting access with Class Based Views
 
 ```python
 from django.contrib.auth.decorators import login_required
@@ -168,7 +168,7 @@ class Article(models.Model):
 
 ---
 
-## Creating object with current user
+## Creating an object with current user
 
 - Do **not** include the `author` field in the form!
 
